@@ -30,3 +30,6 @@ or
 ```bash
 uv add -r requirements.txt
 ```
+```bash
+uv pip install -e .
+```
