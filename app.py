@@ -42,25 +42,33 @@ rag_chain=create_retrieval_chain(retriever,question_answer_chain)
 
 @app.route("/")
 def index():
-    return jsonify({"message": "Medical Chatbot API is running"})
+    return render_template('chat.html')
 
-@app.route("/chat", methods=["POST"])
+# @app.route("/chat", methods=["POST"])
+# def chat():
+#     try:
+#         data = request.json
+#         user_input = data.get("message", "")
+        
+#         if not user_input:
+#             return jsonify({"error": "Message is required"}), 400
+        
+#         response = rag_chain.invoke({"input": user_input})
+#         return jsonify({
+#             "success": True,
+#             "answer": response.get("answer", ""),
+#             "question": user_input
+#         })
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
+@app.route("/get", methods=["GET", "POST"])
 def chat():
-    try:
-        data = request.json
-        user_input = data.get("message", "")
-        
-        if not user_input:
-            return jsonify({"error": "Message is required"}), 400
-        
-        response = rag_chain.invoke({"input": user_input})
-        return jsonify({
-            "success": True,
-            "answer": response.get("answer", ""),
-            "question": user_input
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    msg = request.form["msg"]
+    input = msg
+    print(input)
+    response = rag_chain.invoke({"input": msg})
+    print("Response : ", response["answer"])
+    return str(response["answer"])
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5001)
